@@ -27,7 +27,7 @@ public class Donations
         int count = 0;
         for (int i = 0; i<donationItems.size();i++)
         {
-            // 
+            // isSold will be through
             if (donationItems.get(i).isSold())
             {
                 count++;
@@ -35,13 +35,14 @@ public class Donations
         }
         return count;
     }
-    public void getProfit()
+    public void getSales()
     {
-        
+        // iterate through all items
+        // if its been sold add the price
     }
-    public void getQuantity()
+    public int getQuantity()
     {
-        
+        return donationItems.size();
     }
     
 
