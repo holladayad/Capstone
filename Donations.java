@@ -20,7 +20,7 @@ public class Donations
     
     public void amountSold(Items donationItem)
     {
-        
+        donationItems.add(donationItem)
     }
     public void getProfit()
     {
@@ -30,6 +30,7 @@ public class Donations
     {
         
     }
+    
 
     
 }
