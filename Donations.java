@@ -28,7 +28,7 @@ public class Donations
         for (int i = 0; i<donationItems.size();i++)
         {
             // isSold will be through
-            if (donationItems.get(i).isSold())
+            if (donationItems.get(i).itemSold())
             {
                 count++;
             }
