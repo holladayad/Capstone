@@ -1,11 +1,12 @@
 package CIS484.Capstone;
 
+import java.util.ArrayList;
 public class Employee 
 {
-    // creating private int donation ID //
-    private static int EmployeeID;
-    // static int set as a different value from other classes
+      // static int set as a different value from other classes
     private static final int NEXT_EMPLOYEE_ID = 1000;
+    // creating private int donation ID //
+    private int EmployeeID;
     private String empFirstName; 
     private String empLastName; 
     private String street;
@@ -19,10 +20,14 @@ public class Employee
     private double wage;    // this is the pay variable 
     private double hoursWorked; // this could be determined by work status, but not ideal we should add hours worked to the UI "payroll recorder" 
     
-    public ArrayList<Employee> Employees = new ArrayList<>();
-    public ArrayList<Employee> roles = new ArrayList<>();
     
+    // creating supervisor employee object object
+    private Employee supervisor;
     
+  
+    private String[] roles = {"Cares Employee", "Volunteer", "VoliHelper"};
+    private ArrayList<Employee> Employees;
+    private ArrayList<Employee> suprervisees;  
    
     public Employee (String empFirstName, String empLastName, String street, 
         String city, String state, String zipCode, String phoneNumber, 
@@ -39,10 +44,35 @@ public class Employee
         this.workStatus = workStatus; 
         this.role = role; 
         this.wage = wage; 
-        this.hoursWorked = hoursWorked; 
+        this.hoursWorked = hoursWorked;
+        this.supervisor = null;
+        this.EmployeeID = NEXT_EMPLOYEE_ID;
+    
+        if (!role.equals("Supervisor")) // if role is not supervisor 
+        {
+            this.suprervisees = null; // dont add anythingt to supervisees
+        }
+        else // if role is supervisor 
+        {
+            this.suprervisees = new ArrayList<>();  // creating supervisee array list if work status is supervisor
+        }
     }
-
+ 
 // Setters 
+    public boolean setSupervisor(Employee supervisor)
+    {
+        if(supervisor.getWorkStatus().equals("Supervisor"))
+        {
+            this.supervisor = supervisor;
+            supervisor.addSupervisee(this);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     public void setEmpFirstName(String empFirstName) 
     {
         this.empFirstName = empFirstName;
@@ -158,22 +188,10 @@ public class Employee
     {
         return this.hoursWorked;
     }
-
-    // Assign to store method 
-    public void assignToNewStore(String storeID)
+    
+    public void addSupervisee(Employee employee)
     {
-        
-    }
-   
-    // Do we really need this? couldnt this just be an option under role 
-    public void addSupervisee()
-    {
-       
+        this.suprervisees.add(employee);
     }
     
-    //
-    //public void login()
-    //{
-      //  
-    //}
-}
+}   
