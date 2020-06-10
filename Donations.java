@@ -44,20 +44,10 @@ public class Donations
         }
         return count;
     }
-    
-    // for donator to know the sales of the donations so far.
-    public double getSales()
+    public void getSales()
     {
-        double totalSales = 0.0;
-        for (int i=0; i<donationItems.size();i++)
-        {
-            if (donationItems.get(i).getItemSold())
-            {
-                totalSales += donationItems.get(i).getPrice();
-            }
-        }
-        
-        return totalSales;
+        // iterate through all items
+        // if its been sold add the price
     }
     public int getQuantity()
     {
