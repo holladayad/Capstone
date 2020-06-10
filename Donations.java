@@ -9,16 +9,26 @@ public class Donations
     private static int nextDonationID = 0;
     private ArrayList<Items> donationItems = new ArrayList<>();
     
+    // Donar's information
+    private String firstName;
+    private String lastName;
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String phoneNumber;
+    private String email;
+    
     public Donations(String firstName, String lastName, String city, String state, 
                      String zipcode, String phoneNumber, String email)
     {
         // dont know if we need this?
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.state = state;
-//        this.zipCode = zipCode;
-//        this.phoneNumber = phoneNumber;
-//        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.donationID = nextDonationID++;
     }
     
@@ -27,7 +37,6 @@ public class Donations
         int count = 0;
         for (int i = 0; i<donationItems.size();i++)
         {
-            // isSold will be through
             if (donationItems.get(i).getItemSold())
             {
                 count++;
