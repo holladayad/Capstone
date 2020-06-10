@@ -24,9 +24,6 @@ public class Employee
     // creating supervisor employee object object
     private Employee supervisor;
     
-  
-    private String[] roles = {"Cares Employee", "Volunteer", "VoliHelper"};
-    private ArrayList<Employee> Employees;
     private ArrayList<Employee> suprervisees;  
    
     public Employee (String empFirstName, String empLastName, String street, 
