@@ -16,7 +16,7 @@ public class Transaction {
     
     public void addItem(Items transactionItem)
     {
-        transactionTotal += transactionItem.getPrice();
+        // transactionTotal += transactionItem.getPrice();
         transactionItems.add(transactionItem);
         
     }
