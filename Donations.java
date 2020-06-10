@@ -1,4 +1,4 @@
-package CIS484.Capstone;
+package cis484.Capstone;
 
 import java.util.ArrayList;
 

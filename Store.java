@@ -1,5 +1,7 @@
-package CIS484.Capstone;
+package cis484.Capstone;
 
+import Capstone.Employee;
+import Capstone.Donations;
 import java.util.*;
 
 public class Store {

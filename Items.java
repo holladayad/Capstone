@@ -4,7 +4,7 @@ Date: Jun 10, 2020
 Assignment: MidPoint Deliverable
 Purpose: Item Class for products purchased by customers 
  */
-package CIS484.Capstone;
+package cis484.Capstone;
 
 import java.util.*;
 
