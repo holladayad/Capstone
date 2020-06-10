@@ -1,6 +1,4 @@
-package cis484.Capstone;
-
-import java.util.*;
+package CIS484.Capstone;
 
 import java.util.ArrayList;
 public class Employee 

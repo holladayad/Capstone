@@ -1,4 +1,4 @@
-package cis484.Capstone;
+package CIS484.Capstone;
 
 import java.util.*;
 
