@@ -1,3 +1,10 @@
+/*
+Authors: BHOZZ Technology Solutions: Amber Holladay, Yukai Zhou, Mashiyath Zaman, Gonzo Ocampo, Rimjhim Barua
+Date: Jun 10, 2020
+Assignment: MidPoint Deliverable
+Purpose: Employee Class 
+ */
+
 package CIS484.Capstone;
 
 import java.util.ArrayList;
@@ -47,7 +54,7 @@ public class Employee
     
         if (!role.equals("Supervisor")) // if role is not supervisor 
         {
-            this.suprervisees = null; // dont add anythingt to supervisees
+            this.suprervisees = null; // dont add anything to supervisees
         }
         else // if role is supervisor 
         {

@@ -1,3 +1,10 @@
+/*
+Authors: BHOZZ Technology Solutions: Amber Holladay, Yukai Zhou, Mashiyath Zaman, Gonzo Ocampo, Rimjhim Barua
+Date: Jun 10, 2020
+Assignment: MidPoint Deliverable
+Purpose: UI System
+ */
+
 
 package CIS484.Capstone;
 

@@ -1,3 +1,10 @@
+/*
+Authors: BHOZZ Technology Solutions: Amber Holladay, Yukai Zhou, Mashiyath Zaman, Gonzo Ocampo, Rimjhim Barua
+Date: Jun 10, 2020
+Assignment: MidPoint Deliverable
+Purpose: Donations Class 
+ */
+
 package CIS484.Capstone;
 
 import java.util.ArrayList;
