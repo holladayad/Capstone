@@ -8,8 +8,11 @@ Purpose: Employee Class
 package CIS484.Capstone;
 
 import java.util.ArrayList;
+
 public class Employee 
 {
+    public UI myParent;
+    
       // static int set as a different value from other classes
     private static final int NEXT_EMPLOYEE_ID = 1000;
     // creating private int donation ID //
@@ -33,10 +36,12 @@ public class Employee
     
     private ArrayList<Employee> suprervisees;  
    
+
     public Employee (String empFirstName, String empLastName, String street, 
         String city, String state, String zipCode, String phoneNumber, 
         String email, String workStatus, String role, double wage, double hoursWorked) 
     {
+    
         this.empFirstName = empFirstName;
         this.empLastName = empLastName; 
         this.street = street;
