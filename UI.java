@@ -19,12 +19,17 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.*;
+import java.util.ArrayList;
 
 
 public class UI extends Application {
     //Observable List for listview
     public static ObservableList locationList = FXCollections.observableArrayList();
     public static ObservableList voliList = FXCollections.observableArrayList();
+    
+    // Array list for employee
+    public static ArrayList<Employee> employeeArray = new ArrayList<>();
+
 
     //Observable List for combo box
     public static ObservableList<String>locDrop = FXCollections.observableArrayList("location1","location2");
@@ -33,11 +38,14 @@ public class UI extends Application {
     public static  ObservableList <String> recDrop = FXCollections.observableArrayList("Employee1","Employee2","Employee3");
     public static  ObservableList <String> empDrop = FXCollections.observableArrayList("Employee1","Employee2","Employee3");
     public static  ObservableList <String> rollDrop = FXCollections.observableArrayList("Cares Employee","Volunteer","Volihelper");
-
+    
+    
     //Listview
     public ListView ollocationList = new ListView(locationList);
     public ListView olVoliInfoList = new ListView(voliList);
     //Controls
+
+    
 
     //Location Tab
     Label lbladdLocation = new Label("Add Location");
@@ -56,7 +64,7 @@ public class UI extends Application {
 
     Label lblmodLocation = new Label("Modify Location");
     Label lbllocName2 = new Label("Location Name");
-   ComboBox<String>locationDrop = new ComboBox<>(locDrop);
+    ComboBox<String>locationDrop = new ComboBox<>(locDrop);
     Label lblAddress2 = new Label("Address");
     TextField txtAddress2 = new TextField();
     Label lblZip2 = new Label("Zip");
@@ -66,7 +74,9 @@ public class UI extends Application {
     Button btnsaveLocation = new Button("Save Location Change ->");
 
     //Employee Tab
-    Label lbladdVoli = new Label("Add VoliHelper");
+    
+    Label lbladdVoli = new Label("Add Staff"); // Gonzo changed volihelp to staff
+    Label lblEmployeeType = new Label ("Staff Type:"); // gonzo added this label 
     Label lblvoliName = new Label("Name");
     TextField voliName = new TextField("Name");
     Label lblpersonalPhone = new Label("Personal Phone");
@@ -77,11 +87,13 @@ public class UI extends Application {
     TextField txtdateJoined = new TextField();
     Label bio = new Label("Additional Information");
     TextField txtBio = new TextField();
-    Button btnaddVoli = new Button("Add VoliHelper");
+    Button btnaddVoli = new Button("Add Staff"); // Gonzo changed volihelper to staff 
+    ComboBox<String>cmboEmployeeType = new ComboBox<>(rollDrop); // Gonzo added this combo bax for the employee tab 
 
-    Label lblVoliInfo = new Label("VoliHelper Information");
 
-    Label lblmodVoli = new Label("Modify VoliHelper");
+    Label lblVoliInfo = new Label("Staff Information"); // Gonzo changed volihelper information to staff information 
+
+    Label lblmodVoli = new Label("Modify Staff"); // gonzo changed modify volihelper to modify staff
     Label lblvoliName2 = new Label("Name");
     ComboBox<String>voliHelperDrop = new ComboBox<>(voliDrop);
    Label personalPhone2 = new Label("Personal Phone");
@@ -237,6 +249,8 @@ public class UI extends Application {
         //Add items to Employee Tab
         //left section
         employeePane.add(lbladdVoli,1,1);
+        employeePane.add(lblEmployeeType,1,2); // gonzo added this label 
+        employeePane.add(cmboEmployeeType, 1,3); // gonzo added combobox for employees
         employeePane.add(lblvoliName,1,4);
         employeePane.add(voliName,1,5);
         employeePane.add(lblpersonalPhone,1,6);
@@ -256,18 +270,18 @@ public class UI extends Application {
 
         //Right Section
         employeePane.add(lblmodVoli,5,1);
-        employeePane.add(lblvoliName2,5,4);
-        employeePane.add(voliHelperDrop,5,5);
-        employeePane.add(personalPhone2,5,6);
-        employeePane.add(txtpersonalPhone2,5,7);
-        employeePane.add(lblhomeAdd2,5,8);
-        employeePane.add(txthomeAddress2,5,9);
-        employeePane.add(lbldateJoined2,5,10);
-        employeePane.add(txtdateJoined2,5,11);
-        employeePane.add(lblbio2,5,12);
-        employeePane.add(txtBio2,5,13);
-        employeePane.add(btnsaveVoli,5,14);
-
+        employeePane.add(lblvoliName2,5,2);
+        employeePane.add(voliHelperDrop,5,3);
+        employeePane.add(personalPhone2,5,4);
+        employeePane.add(txtpersonalPhone2,5,5);
+        employeePane.add(lblhomeAdd2,5,6);
+        employeePane.add(txthomeAddress2,5,7);
+        employeePane.add(lbldateJoined2,5,8);
+        employeePane.add(txtdateJoined2,5,9);
+        employeePane.add(lblbio2,5,10);
+        employeePane.add(txtBio2,5,11);
+        employeePane.add(btnsaveVoli,5,12);
+        // gonzo made some adjustments to the spacing of employees
 
         //setGap
         employeePane.setHgap(20);
@@ -350,6 +364,32 @@ public class UI extends Application {
         primaryStage.setTitle("Shenandoah CARES v1.0");
         primaryStage.setScene(primaryScene);
         primaryStage.show();//won't show without this
+        
+        
+        
+        
+        btnaddVoli.setOnAction(e -> 
+        {
+        //********** add Array list here  ***********************//
+            
+           // cmboEmployeeType.get
+            // getting data from text fields
+            String employeeName = voliName.getText();
+            String employeePhone = txtpersonalPhone.getText();
+            String homeAddress = txthomeAddress.getText();
+            String dateJoined = txtdateJoined.getText();
+            String additionalInfo = txtBio.getText();
+            
+            // clearing text fields 
+            voliName.clear();
+            txtpersonalPhone.clear();
+            txthomeAddress.clear();
+            txtdateJoined.clear();
+            txtBio.clear();
+            
+            
+            
+        });
     }
 
 
