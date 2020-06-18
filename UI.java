@@ -439,7 +439,71 @@ public class UI extends Application {
         });
     }
 
+    @Override
+    public void stop()
+    {
+        //Saves everything to the database
+        //runs automatically when the program closes
+        
+        ArrayList<Employee> employee;
+        Employee currentEmployee;
+        
+             //insert statements for Student table
+        for ( int i = 0; i < employeeArray.size(); i++)
+        {                
+            currentEmployee = employeeArray.get(i);
 
+            String sql = "INSERT INTO JAVAUSER.EMPLOYEE (EMPLOYEEID, EMPLOYEENAME, EMPLOYEEPHONE, EMPLOYEEADDRESS, EMPLOYEEDATEJOINED, EMPLOYEEINFO) VALUES (";
+            sql += currentEmployee.getEmployeeID()+ ",'";
+            sql += currentEmployee.getEmpName()+ "','";
+            sql += currentEmployee.getPhoneNumber() + "','";
+            sql += currentEmployee.getAddress() + "',";
+            sql += currentEmployee.getDateJoined() + ",'";
+            sql += currentEmployee.getAdditionalInfo() + "')";
+
+            System.out.println(sql); // for testing purposes 
+
+            sendCommand(sql);
+        }
+    }
+    
+    public void sendCommand(String query)
+    {
+        String url = "jdbc:oracle:thin:@localhost:1521:XE";
+        String user = "javauser";
+        String pass = "javapass";
+        
+       // OracleDataSource ds;
+        try
+        {          
+            //create the connection using the object from Oracle
+            //    ds = new OracleDataSource();
+            
+            //set the connection url in the object
+           // ds.setURL(url);
+            
+            //attempt to connect with specified username and login, default as "javauser" and "javapass"
+           // conn = ds.getConnection(user, pass);
+            
+            //handling the results
+            stmt = conn.createStatement(rs.TYPE_SCROLL_SENSITIVE, rs.CONCUR_READ_ONLY);
+            
+            //send the query to oracle
+            rs = stmt.executeQuery(query);
+            
+        }
+        
+        catch(SQLException e)
+        {           
+            System.out.println(e.toString());           
+        }       
+    }
+    
+    // Implements a data read from the Employee DB Table
+    public void loadDataFromDB()
+    {
+        
+    }
     public static void main(String[] args) {
         launch(args);
     }
