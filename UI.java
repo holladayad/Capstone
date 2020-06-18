@@ -8,6 +8,9 @@ Purpose: UI System
 
 package CIS484.Capstone;
 
+// ArrayLists & Database Connection
+import java.sql.*;
+
 import javafx.application.Application;
 import javafx.collections.*;
 
@@ -74,11 +77,10 @@ public class UI extends Application {
     Button btnsaveLocation = new Button("Save Location Change ->");
 
     //Employee Tab
-    
     Label lbladdVoli = new Label("Add Staff"); // Gonzo changed volihelp to staff
     Label lblEmployeeType = new Label ("Staff Type:"); // gonzo added this label 
     Label lblvoliName = new Label("Name");
-    TextField voliName = new TextField("Name");
+    TextField voliName = new TextField("");
     Label lblpersonalPhone = new Label("Personal Phone");
     TextField txtpersonalPhone = new TextField();
     Label lblhomeAdd = new Label("Home Address");
@@ -96,15 +98,15 @@ public class UI extends Application {
     Label lblmodVoli = new Label("Modify Staff"); // gonzo changed modify volihelper to modify staff
     Label lblvoliName2 = new Label("Name");
     ComboBox<String>voliHelperDrop = new ComboBox<>(voliDrop);
-   Label personalPhone2 = new Label("Personal Phone");
-   TextField txtpersonalPhone2 = new TextField();
-   Label lblhomeAdd2 = new Label("Home Address");
-   TextField txthomeAddress2 = new TextField();
-   Label lbldateJoined2 = new Label("Date Joined");
-   TextField txtdateJoined2 = new TextField();
-   Label lblbio2 = new Label("Additional Information");
-   TextField txtBio2 = new TextField();
-   Button btnsaveVoli = new Button("Save Change");
+    Label personalPhone2 = new Label("Personal Phone");
+    TextField txtpersonalPhone2 = new TextField();
+    Label lblhomeAdd2 = new Label("Home Address");
+    TextField txthomeAddress2 = new TextField();
+    Label lbldateJoined2 = new Label("Date Joined");
+    TextField txtdateJoined2 = new TextField();
+    Label lblbio2 = new Label("Additional Information");
+    TextField txtBio2 = new TextField();
+    Button btnsaveVoli = new Button("Save Change");
 
    //Board Tab
     Label lblmsgRec = new Label("Message Recorder");
@@ -152,12 +154,6 @@ public class UI extends Application {
     Label lbleventInfo = new Label("Event Information");
     TextArea txteventInfo = new TextArea();
 
-
-
-
-
-
-
     //Pane(s)
     GridPane primaryPane = new GridPane();
     GridPane locPane = new GridPane();
@@ -175,11 +171,10 @@ public class UI extends Application {
     Tab tabPayroll = new Tab("Payroll");
     Tab tabEvent = new Tab("Events");
 
-
-
-
-
-
+    //Database Connection
+    public Connection conn;
+    public Statement stmt;
+    public ResultSet rs;
 
     @Override
     public void start(Stage primaryStage) {
@@ -222,7 +217,6 @@ public class UI extends Application {
 
 
         //middle section
-
         locPane.add(lbllocInfo,3,1);
         locPane.add(ollocationList,3,2,1,12);
         ollocationList.setMinHeight(200);
@@ -249,18 +243,18 @@ public class UI extends Application {
         //Add items to Employee Tab
         //left section
         employeePane.add(lbladdVoli,1,1);
-        employeePane.add(lblEmployeeType,1,2); // gonzo added this label 
-        employeePane.add(cmboEmployeeType, 1,3); // gonzo added combobox for employees
-        employeePane.add(lblvoliName,1,4);
-        employeePane.add(voliName,1,5);
-        employeePane.add(lblpersonalPhone,1,6);
-        employeePane.add(txtpersonalPhone,1,7);
-        employeePane.add(lblhomeAdd,1,8);
-        employeePane.add(txthomeAddress,1,9);
-        employeePane.add(lbldateJoined,1,10);
-        employeePane.add(txtdateJoined,1,11);
-        employeePane.add(bio,1,12);
-        employeePane.add(txtBio,1,13);
+       // employeePane.add(lblEmployeeType,1,2); // gonzo added this label 
+      //  employeePane.add(cmboEmployeeType, 1,3); // gonzo added combobox for employees
+        employeePane.add(lblvoliName,1,3);
+        employeePane.add(voliName,1,4);
+        employeePane.add(lblpersonalPhone,1,5);
+        employeePane.add(txtpersonalPhone,1,6);
+        employeePane.add(lblhomeAdd,1,7);
+        employeePane.add(txthomeAddress,1,8);
+        employeePane.add(lbldateJoined,1,9);
+        employeePane.add(txtdateJoined,1,10);
+        employeePane.add(bio,1,11);
+        employeePane.add(txtBio,1,12);
         employeePane.add(btnaddVoli,1,14);
 
         //middle section
@@ -367,27 +361,80 @@ public class UI extends Application {
         
         
         
-        
+        // when add staff is clicked 
         btnaddVoli.setOnAction(e -> 
         {
-        //********** add Array list here  ***********************//
+            boolean failure = false; 
             
-           // cmboEmployeeType.get
-            // getting data from text fields
-            String employeeName = voliName.getText();
-            String employeePhone = txtpersonalPhone.getText();
-            String homeAddress = txthomeAddress.getText();
-            String dateJoined = txtdateJoined.getText();
-            String additionalInfo = txtBio.getText();
+            // if name is empty 
+            if(voliName.getText().isEmpty())
+            {
+                failure = true;
+                voliName.appendText("Error! Please Input Name!"); // appending text to re-input staff name 
+            }
+          
+    // list view for the employee information --- olVoliInfoList
+      
+            // if phone nmber is empty 
+            if(txtpersonalPhone.getText().isEmpty())
+            {
+                failure = true;
+                txtpersonalPhone.appendText("Error! Please Input valid phone number!"); // appending text to re-input phone number
+            }
+            
+            // if address is empty 
+            if(txthomeAddress.getText().isEmpty())
+            {
+                failure = true;
+                txthomeAddress.appendText("Error! Please Input valid address!"); // appending text to re-input address
+            }
+    
+            // if date joined field is empty 
+            if(txtdateJoined.getText().isEmpty())
+            {
+                boolean test;
+                test = false;
+                String dateJoined = txtdateJoined.getText();
+                
+                for(int i = 0; i < dateJoined.length(); i++)
+                {
+                    if(dateJoined.length() > 8)
+                        {
+                            test = true;
+                        }
+                    
+                    if(dateJoined.charAt(i) == '/')
+                        {
+                            test = true;
+                        }
+                }
+                
+                if(test == false)
+                    {
+                        failure = true;
+                        txtdateJoined.appendText("Error! Please Input valid date!"); // appending text to re-input date 
+                    }
+            }
+            
+            if(!failure)
+            {
+                // Create new Employee object
+                Employee newEmployee = new Employee(voliName.getText(), 
+                                                    txtpersonalPhone.getText(),
+                                                    txthomeAddress.getText(),
+                                                    txtdateJoined.getText(),
+                                                    txtBio.getText());
+                
+                employeeArray.add(newEmployee); // adds new employee to employee array list
+                voliList.add(newEmployee.getEmpName()); // adds new employee to observable list
+            }
             
             // clearing text fields 
             voliName.clear();
             txtpersonalPhone.clear();
             txthomeAddress.clear();
             txtdateJoined.clear();
-            txtBio.clear();
-            
-            
+            txtBio.clear(); 
             
         });
     }
