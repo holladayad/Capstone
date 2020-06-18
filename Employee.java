@@ -1,62 +1,75 @@
 /*
 Authors: BHOZZ Technology Solutions: Amber Holladay, Yukai Zhou, Mashiyath Zaman, Gonzo Ocampo, Rimjhim Barua
-Date: Jun 10, 2020
-Assignment: MidPoint Deliverable
 Purpose: Employee Class 
  */
 
 package CIS484.Capstone;
 
 import java.util.ArrayList;
+import java.util.*;
 
 public class Employee 
 {
-    public UI myParent;
-    
-      // static int set as a different value from other classes
-    private static final int NEXT_EMPLOYEE_ID = 1000;
-    // creating private int donation ID //
+    public UI myParent; // to get the UI class
+
+    // creating private int donation ID 
     private int EmployeeID;
-    private String empFirstName; 
-    private String empLastName; 
-    private String street;
-    private String city; 
-    private String state;
-    private String zipCode; 
+    
+    // creating string for the employee first name 
+    private String firstName;
+    
+    // creating string for the employee last name 
+    private String lastName;
+
+    // creating String for the phone number 
     private String phoneNumber;
-    private String email;
-    private String workStatus; // part-time, full-time etc. 
-    private String role; // Aka Cares Employee, Volunteer or VoliHelper
-    private double wage;    // this is the pay variable 
-    private double hoursWorked; // this could be determined by work status, but not ideal we should add hours worked to the UI "payroll recorder" 
     
+    // creating String for the employee's home address
+    private String address;
     
+    // creating String for the date joined 
+    private String dateJoined;
+    
+    // creating String for any additional information 
+    private String additionalInfo;
+   
+    // private String email;
+    
+     // static int set as a different value from other classes
+    private static int NEXT_EMPLOYEE_ID = 1000;
+ 
+    Scanner in = new Scanner(System.in);
+
+   /* 
+    // private String workStatus; // part time full time? 
     // creating supervisor employee object object
     private Employee supervisor;
     
     private ArrayList<Employee> suprervisees;  
-   
+   */
 
-    public Employee (String empFirstName, String empLastName, String street, 
-        String city, String state, String zipCode, String phoneNumber, 
-        String email, String workStatus, String role, double wage, double hoursWorked) 
+    public Employee (String empName, String phoneNumber, String address, String dateJoined, String additionalInfo)
     {
-    
-        this.empFirstName = empFirstName;
-        this.empLastName = empLastName; 
-        this.street = street;
-        this.city = city;
-        this.state = state; 
-        this.zipCode = zipCode; 
-        this.phoneNumber = phoneNumber;
-        this.email = email; 
-        this.workStatus = workStatus; 
-        this.role = role; 
-        this.wage = wage; 
-        this.hoursWorked = hoursWorked;
-        this.supervisor = null;
-        this.EmployeeID = NEXT_EMPLOYEE_ID;
-    
+        String first; // first name
+        String last;  // last name
+        int end = 0;  // end of first name
+        int beg;      // end of last name
+        
+         //Find the first name index values
+        for (int count = 0; count < empName.length(); count++)
+        {
+            if (empName.charAt(count) == ' ') //if the current character is a space, record the index
+            { 
+                end = count;
+            }
+        }   
+        
+        beg = end + 1; //record the index of the beginning of the last name
+                
+        first = empName.substring(0, end);
+        last = empName.substring(beg, empName.length());
+        
+    /*
         if (!role.equals("Supervisor")) // if role is not supervisor 
         {
             this.suprervisees = null; // dont add anything to supervisees
@@ -65,10 +78,52 @@ public class Employee
         {
             this.suprervisees = new ArrayList<>();  // creating supervisee array list if work status is supervisor
         }
+      */
+        this.firstName = first;
+        this.lastName = last;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.dateJoined = dateJoined;
+        this.additionalInfo = additionalInfo;
+        this.EmployeeID = NEXT_EMPLOYEE_ID;
+        
+        NEXT_EMPLOYEE_ID++;
     }
  
+    // Override to accept pre-existing Employees with already assigned IDs
+    public Employee(int empID, String empName, String address, String dateJoined, String additionalInfo)
+    {
+        String first; // first name
+        String last;  // last name
+        int end = 0;  // end of first name
+        int beg;      // end of last name
+        
+         //Find the first name index values
+        for (int count = 0; count < empName.length(); count++)
+        {
+            if (empName.charAt(count) == ' ') //if the current character is a space, record the index
+            { 
+                end = count;
+            }
+        }   
+        
+        beg = end + 1; //record the index of the beginning of the last name
+                
+        first = empName.substring(0, end);
+        last = empName.substring(beg, empName.length());
+        
+        this.firstName = first;
+        this.lastName = last;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.dateJoined = dateJoined;
+        this.additionalInfo = additionalInfo;
+        this.EmployeeID = empID;
+        
+        NEXT_EMPLOYEE_ID = empID + 1;
+    }
 // Setters 
-    public boolean setSupervisor(Employee supervisor)
+  /*  public boolean setSupervisor(Employee supervisor)
     {
         if(supervisor.getWorkStatus().equals("Supervisor"))
         {
@@ -81,126 +136,57 @@ public class Employee
             return false;
         }
     }
-    
-    public void setEmpFirstName(String empFirstName) 
+    */
+    public String getEmpName()
     {
-        this.empFirstName = empFirstName;
+        return this.lastName + ", " + this.firstName;
     }
-    
-    public void setEmpLastName(String empLastName) 
-    {
-        this.empLastName = empLastName;
-    }
-    
-    public void setStreet(String street) 
-    {
-        this.street = empFirstName;
-    }
+  
+   public String getPhoneNumber()
+   {
+       return this.phoneNumber;
+   }
+   
+   public void setPhoneNumber(String phoneNumber)
+   {
+       this.phoneNumber = phoneNumber;
+   }
+   
+   public String getAddress()
+   {
+       return this.address;
+   }
+ 
+   public void setAddress(String address)
+   {
+       this.address = address;
+   }
+   
+   public String getDateJoined()
+   {
+       return this.dateJoined;
+   }
+   
+   public void setDateJoined(String dateJoined)
+   {
+       this.dateJoined = dateJoined;
+   }
+   
+   public String getAdditionalInfo()
+   {
+       return this.additionalInfo;
+   }
+   
+   public void setAdditionalInfo(String additionalInfo)
+   {
+       this.additionalInfo = additionalInfo;
+   }
+   
+   public int getEmployeeID()
+   {
+       return this.EmployeeID;
+   }
 
-    public void setCity(String city)
-    {
-        this.city = city;
-    }
-
-    public void setState(String state)
-    {
-        this.state = state;
-    }
-    
-    public void setZipCode(String setZipCode)
-    {
-        this.zipCode = zipCode;
-    }
-
-    public void setPhoneNumber(String phoneNumber)
-    {
-        this.phoneNumber = phoneNumber;
-    }
-    
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-    
-    public void setWorkStatus(String workStatus)
-    {
-        this.workStatus = workStatus;
-    }
-    
-    public void setRole(String role)
-    {
-        this.role = role;
-    }
-    
-    public void setWage(double wage)
-    {
-        this.wage = wage;
-    }
-    
-    public void setHoursWorked(double hoursWorked)
-    {
-        this.hoursWorked = hoursWorked; 
-    }
-    
-// Getters 
-    public String getEmpFirstName()
-    {
-        return this.empFirstName;
-    }
-    
-    public String getEmpLastName()
-    {
-        return this.empLastName;
-    }
-    
-    public String getStreet()
-    {
-        return this.street;
-    }
-
-    public String getCity()
-    {
-       return this.city;
-    }
-
-    public String getState()
-    {
-        return this.state;
-    }
-    
-    public String getZipCode()
-    {
-        return this.zipCode;
-    }
-
-    public String getPhoneNumber()
-    {
-        return this.phoneNumber;
-    }
-    
-    public String getEmail()
-    {
-        return this.email;
-    }
-    
-    public String getWorkStatus()
-    {
-        return this.workStatus;
-    }
-    
-    public double getWage()
-    {
-        return this.wage;
-    }
-    
-    public double getHoursWorked()
-    {
-        return this.hoursWorked;
-    }
-    
-    public void addSupervisee(Employee employee)
-    {
-        this.suprervisees.add(employee);
-    }
+   
     
 }   
