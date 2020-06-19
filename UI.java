@@ -23,9 +23,16 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.*;
 import java.util.ArrayList;
+import javafx.scene.Node;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Window;
 
 
 public class UI extends Application {
+    // ArrayLists to store data
+    ArrayList<Store> storeData = new ArrayList<>();
+    
+    
     //Observable List for listview
     public static ObservableList locationList = FXCollections.observableArrayList();
     public static ObservableList voliList = FXCollections.observableArrayList();
@@ -53,14 +60,20 @@ public class UI extends Application {
     //Location Tab
     Label lbladdLocation = new Label("Add Location");
     Label lbllocName = new Label("Location Name");
-    Label lblAddress = new Label("Address");
+    Label lblStreet = new Label("Street Address");
+    Label lblCity = new Label("City");
+    Label lblState = new Label("State");
     Label lblZip = new Label("Zip");
     Label lblphoneNum = new Label("Phone Number");
+    Label lblEmail = new Label("Email");
     Button btnaddLocation = new Button("Add Location ->");
     TextField txtlocName = new TextField();
-    TextField txtAddress = new TextField();
+    TextField txtStreet = new TextField();
+    TextField txtCity = new TextField();
+    TextField txtState= new TextField();
     TextField txtZip = new TextField();
     TextField txtphoneNum = new TextField();
+    TextField txtEmail = new TextField();
     TextField txtLocDisplay = new TextField();
 
     Label lbllocInfo = new Label("Location Information");
@@ -170,6 +183,11 @@ public class UI extends Application {
     Tab tabBoard = new Tab("Board");
     Tab tabPayroll = new Tab("Payroll");
     Tab tabEvent = new Tab("Events");
+    
+    // create tables and lists
+    TableView<Store> storeTable;
+    ObservableList<Store> storeTableData;
+    
 
     //Database Connection
     public Connection conn;
@@ -202,44 +220,145 @@ public class UI extends Application {
 
         //Add items to Location Tab
         //left section
-        locPane.setAlignment(Pos.CENTER_LEFT);
-        locPane.add(lbladdLocation,1,1);
-        locPane.add(lbllocName,1,4);
-        locPane.add(txtlocName,1,5);
-        locPane.add(lblAddress,1,6);
-        locPane.add(txtAddress,1,7);
-        locPane.add(lblZip,1,8);
-        locPane.add(txtZip,1,9);
-        locPane.add(lblphoneNum,1,10);
-        locPane.add(txtphoneNum,1,11);
-        locPane.add(btnaddLocation,1,12);
-
+//        locPane.setAlignment(Pos.CENTER_LEFT);
+//        locPane.add(lbladdLocation,1,1);
+//        locPane.add(lbllocName,1,4);
+//        locPane.add(txtlocName,1,5);
+//        locPane.add(lblStreet,1,6);
+//        locPane.add(txtStreet,1,7);
+//        locPane.add(lblCity,1,8);
+//        locPane.add(txtCity,1,9);
+//        locPane.add(lblState,1,10);
+//        locPane.add(txtState,1,11);
+//        locPane.add(lblZip,1,12);
+//        locPane.add(txtZip,1,13);
+//        locPane.add(lblphoneNum,1,14);
+//        locPane.add(txtphoneNum,1,15);
+//        locPane.add(lblEmail,1,16);
+//        locPane.add(txtEmail,1,17);
+        
+        locPane.add(btnaddLocation,1,18);
 
 
         //middle section
-        locPane.add(lbllocInfo,3,1);
-        locPane.add(ollocationList,3,2,1,12);
-        ollocationList.setMinHeight(200);
+//        locPane.add(lbllocInfo,3,1);
+//        locPane.add(ollocationList,3,2,1,12);
+//        ollocationList.setMinHeight(200);
 
 
         //Right section
-        locPane.add(lblmodLocation,5,1);
-        locPane.add(lbllocName2,5,4);
-        locPane.add(locationDrop,5,5);
-        locPane.add(lblAddress2,5,6);
-        locPane.add(txtAddress2,5,7);
-        locPane.add(lblZip2,5,8);
-        locPane.add(txtZip2,5,9);
-        locPane.add(lblphoneNum2,5,10);
-        locPane.add(txtphoneNum2,5,11);
-        locPane.add(btnsaveLocation,5,12);
+//        locPane.add(lblmodLocation,5,1);
+//        locPane.add(lbllocName2,5,4);
+//        locPane.add(locationDrop,5,5);
+//        locPane.add(lblAddress2,5,6);
+//        locPane.add(txtAddress2,5,7);
+//        locPane.add(lblZip2,5,8);
+//        locPane.add(txtZip2,5,9);
+//        locPane.add(lblphoneNum2,5,10);
+//        locPane.add(txtphoneNum2,5,11);
+//        locPane.add(btnsaveLocation,5,12);
 
 
         //setGap
-        locPane.setHgap(20);
-        locPane.setVgap(5);
+//        locPane.setHgap(20);
+//        locPane.setVgap(5);
+        
+        
+        // saveLocation button
+        btnaddLocation.setOnAction(e ->{
+            GridPane addStorePane = new GridPane();
+            Button btnAddLocInner = new Button("Add Location");
+            
+            addStorePane.setAlignment(Pos.CENTER_LEFT);
+            addStorePane.add(lbladdLocation,1,1);
+            addStorePane.add(lbllocName,1,4);
+            addStorePane.add(txtlocName,1,5);
+            
+            addStorePane.add(lblStreet,1,6);
+            addStorePane.add(txtStreet,1,7);
+            
+            addStorePane.add(lblCity,1,8);
+            addStorePane.add(txtCity,1,9);
+            
+            addStorePane.add(lblState,1,10);
+            addStorePane.add(txtState,1,11);
+            
+            addStorePane.add(lblZip,1,12);
+            addStorePane.add(txtZip,1,13);
+            
+            addStorePane.add(lblphoneNum,1,14);
+            addStorePane.add(txtphoneNum,1,15);
+            
+            addStorePane.add(lblEmail,1,16);
+            addStorePane.add(txtEmail,1,17);
+            
+            addStorePane.add(btnAddLocInner,1,18);
+            
+            
+            
+            
+            btnAddLocInner.setOnAction(a ->{
+                boolean valid = true;
+                if(valid)
+                {
 
+                    storeData.add((new Store(txtStreet.getText(), txtCity.getText(),
+                            txtState.getText(), txtZip.getText(),
+                            txtphoneNum.getText(), txtEmail.getText())));
 
+                    storeTableData.clear();
+                    for (Store s: storeData)
+                    {
+                        System.out.println(s);
+                        storeTableData.add(s);
+                    }
+                    txtlocName.clear();
+                    txtStreet.clear();
+                    txtCity.clear();
+                    txtState.clear();
+                    txtZip.clear();
+                    txtphoneNum.clear();
+                    txtEmail.clear();
+
+                    Window window = ((Node)(a.getSource())).getScene().getWindow();
+                    ((Stage) window).close();
+                }
+            });
+            
+            Scene secondScene = new Scene(addStorePane, 500, 500);
+            Stage secondStage = new Stage();
+            secondStage.setScene(secondScene);
+            secondStage.setTitle("Add New Store");
+            secondStage.show();
+  
+        });
+        
+        storeTable = new TableView<>();
+        storeTableData = FXCollections.observableArrayList(storeData);
+        storeTable.setItems(storeTableData);
+        
+        TableColumn tcStoreID = new TableColumn("ID");
+        TableColumn tcLocationName = new TableColumn("Location Name");
+        TableColumn tcStreet = new TableColumn("Street Address");
+        TableColumn tcCity = new TableColumn("City");
+        TableColumn tcState = new TableColumn("State");
+        TableColumn tcZip = new TableColumn("Zip Code");
+        TableColumn tcPhone = new TableColumn("Phone Number");
+        TableColumn tcEmail = new TableColumn("Email");
+        
+        tcStoreID.setCellValueFactory(new PropertyValueFactory<Store, Integer>("storeID"));
+        tcLocationName.setCellValueFactory(new PropertyValueFactory<Store, String>("Location Name"));
+        tcStreet.setCellValueFactory(new PropertyValueFactory<Store, String>("Street"));
+        tcCity.setCellValueFactory(new PropertyValueFactory<Store, String>("City"));
+        tcState.setCellValueFactory(new PropertyValueFactory<Store, String>("State"));
+        tcZip.setCellValueFactory(new PropertyValueFactory<Store, String>("Zip"));
+        tcPhone.setCellValueFactory(new PropertyValueFactory<Store, String>("Phone Number"));
+        tcEmail.setCellValueFactory(new PropertyValueFactory<Store, String>("Email"));
+        
+        storeTable.getColumns().addAll(tcStoreID, tcLocationName, tcStreet,
+                tcCity, tcState, tcZip, tcPhone, tcEmail);
+        locPane.add(storeTable, 1, 1);
+        
         //Add items to Employee Tab
         //left section
         employeePane.add(lbladdVoli,1,1);
@@ -358,6 +477,8 @@ public class UI extends Application {
         primaryStage.setTitle("Shenandoah CARES v1.0");
         primaryStage.setScene(primaryScene);
         primaryStage.show();//won't show without this
+        
+        storeTable.setMinWidth(primaryScene.getWidth());
         
         
         
