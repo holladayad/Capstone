@@ -12,6 +12,7 @@ import java.util.*;
 public class Store {
     
     private int storeID;
+    private String locationName;
     private String street;
     private String city;
     private String state;
@@ -24,8 +25,9 @@ public class Store {
     private ArrayList<Transaction> allTransactions = new ArrayList<>();
     private ArrayList<Donations> allDonations = new ArrayList<>();
     
-    public Store(String street, String city, String state, String zipCode, String phoneNumber, String email)
+    public Store(String locationName, String street, String city, String state, String zipCode, String phoneNumber, String email)
     {
+        this.locationName = locationName;
         this.street = street;
         this.city = city;
         this.state = state;
@@ -35,9 +37,15 @@ public class Store {
         this.storeID = nextStoreID++;
     }
     
-    public void editLocation()
+    public void editLocation(String locationName, String street, String city, String state, String zipCode, String phoneNumber, String email)
     {
-        
+        this.locationName = locationName;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
     
     public void addEmployee(Employee newEmployee)
@@ -48,6 +56,41 @@ public class Store {
     public void addDonation(Donations newDonation)
     {
         this.allDonations.add(newDonation);
+    }
+
+    public int getStoreID() {
+        return storeID;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+    
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public String getPhoneNumber() {
+        String formatedNumber = "(" + this.phoneNumber.substring(0, 3);
+        formatedNumber += ")-" + this.phoneNumber.substring(3, 6);
+        formatedNumber += "-" + this.phoneNumber.substring(6);
+        return formatedNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
     
     public ArrayList<Employee> getEmployees()

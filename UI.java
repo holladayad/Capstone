@@ -302,9 +302,9 @@ public class UI extends Application {
                 if(valid)
                 {
 
-                    storeData.add((new Store(txtStreet.getText(), txtCity.getText(),
-                            txtState.getText(), txtZip.getText(),
-                            txtphoneNum.getText(), txtEmail.getText())));
+//                    storeData.add((new Store(txtStreet.getText(), txtCity.getText(),
+//                            txtState.getText(), txtZip.getText(),
+//                            txtphoneNum.getText(), txtEmail.getText())));
 
                     storeTableData.clear();
                     for (Store s: storeData)
