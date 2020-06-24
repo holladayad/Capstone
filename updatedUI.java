@@ -2,6 +2,7 @@ package CIS484.Capstone;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.*;
+import oracle.jdbc.pool.OracleDataSource;
 
 
 public class updatedUI extends Application {
@@ -268,10 +270,10 @@ public class updatedUI extends Application {
     TableView<Store> storeTable;
     ObservableList<Store> storeTableData;
 
-   //Database Connection
-    public Connection conn;
-    public Statement stmt;
-    public ResultSet rs;   
+   // Database Connection
+    Connection dbConn;
+    Statement commStmt;
+    ResultSet dbResults; 
    
    @Override
    public void start(Stage primaryStage) {
@@ -304,34 +306,10 @@ public class updatedUI extends Application {
 
 
        //Add items to Location Tab
-       //left section
-//       radioLocAddLocation.setToggleGroup(groupLoc);
-//       radioLocEditLocation.setToggleGroup(groupLoc);
-//       locPane.setAlignment(Pos.CENTER);
-//
-//
-//
-//       locPane.add(lbllocName, 1, 1, 2, 1);
-//       locPane.add(txtlocName, 1, 2, 2, 1);
-//       locPane.add(lblAddress, 1, 3, 2, 1);
-//       locPane.add(txtAddress, 1, 4, 2, 1);
-//       locPane.add(lblZip, 1, 5, 2, 1);
-//       locPane.add(txtZip, 1, 6, 2, 1);
-//       locPane.add(lblphoneNum, 1, 7, 2, 1);
-//       locPane.add(txtphoneNum, 1, 8, 2, 1);
-//       locPane.add(radioLocAddLocation, 1, 9);
-//       locPane.add(radioLocEditLocation, 2, 9);
-//       locPane.add(btnConfirmLoc, 1, 11, 2, 1);
 
         locPane.add(btnaddLocation,1,18);
         locPane.add(btnEditLocation, 2, 18);
         locPane.add(btnDelLocation,3,18);
-
-       //middle section
-
-//       locPane.add(lbllocInfo, 5, 1);
-//       locPane.add(ollocationList, 5, 2, 2, 12);
-//       ollocationList.setMinHeight(200);
 
 
        //setGap
@@ -370,9 +348,7 @@ public class updatedUI extends Application {
             
             addStorePane.add(btnAddLocInner,1,18);
             
-            
-            
-            
+            // Add and save location
             btnAddLocInner.setOnAction(a ->{
                 String phoneNumber = txtphoneNum.getText().replace("-", "");
                 phoneNumber = phoneNumber.replace("(", "");
@@ -407,6 +383,7 @@ public class updatedUI extends Application {
                 ((Stage) window).close();
             });
             
+            // new scene for the location
             Scene secondScene = new Scene(addStorePane, 500, 500);
             Stage secondStage = new Stage();
             secondStage.setScene(secondScene);
@@ -415,6 +392,7 @@ public class updatedUI extends Application {
   
         });
         
+        // create a locations table
         storeTable = new TableView<>();
         storeTableData = FXCollections.observableArrayList(storeData);
         storeTable.setItems(storeTableData);
@@ -446,7 +424,7 @@ public class updatedUI extends Application {
         storeTable.prefWidthProperty().bind(primaryStage.widthProperty());
         
         
-        
+        // Edit a location
         btnEditLocation.setOnAction(e-> {
             if (storeTable.getSelectionModel().isEmpty()){
                 return;
@@ -495,7 +473,7 @@ public class updatedUI extends Application {
 
             addStorePane.add(btnEditLocInner,1,18);
             
-            
+            // save the edits
             btnEditLocInner.setOnAction(a ->{
                 String phoneNumber = txtphoneNum.getText().replace("-", "");
                 phoneNumber = phoneNumber.replace("(", "");
@@ -539,6 +517,7 @@ public class updatedUI extends Application {
             secondStage.show();
         });
         
+        // delete Location selected
         btnDelLocation.setOnAction(e -> {
             if(storeTable.getSelectionModel().isEmpty())
             {
@@ -727,13 +706,6 @@ public class updatedUI extends Application {
        donationPane.setHgap(10);
        donationPane.setVgap(10);
 
-
-
-
-
-
-
-
        //add items to login pane
        loginPane.setAlignment(Pos.CENTER);
 
@@ -778,13 +750,9 @@ public class updatedUI extends Application {
        //Nest the Scene in the Stage
        primaryStage.setTitle("Shenandoah CARES v1.0");
        primaryStage.setScene(primaryScene);
-
-
-
-
-
    }
    
+   // Error Checking for locations tab
    public String storeValidator(String locationName, String street, String city,
            String state, String zipCode, String phoneNumber, String email){
        String error = "";
@@ -828,14 +796,46 @@ public class updatedUI extends Application {
        }
        return error;
    }
-   
-   
-
 
    public static void main(String[] args) {
        launch(args);
    }
 
+   
+       public void sendSQL(String sqlQuery)
+    {
+        String url = "jdbc:oracle:thin:@localhost:1521:XE";
+        String user = "javauser";
+        String pass = "javapass";
+        
+        OracleDataSource ds;
+        
+        try
+        {          
+            //create the connection using the object from Oracle
+            ds = new OracleDataSource();
+            
+            //set the connection url in the object
+            ds.setURL(url);
+            
+            //attempt to connect with specified username and login, default as "javauser" and "javapass"
+            dbConn = ds.getConnection(user, pass);
+            
+            //handling the results
+            commStmt = dbConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            
+            //send the query to oracle
+            dbResults = commStmt.executeQuery(sqlQuery);
+            
+        }
+        
+        catch(SQLException e)
+        {           
+            System.out.println(e.toString());           
+        }       
+    }
 }
+
+
 
 
