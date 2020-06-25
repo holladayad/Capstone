@@ -3,7 +3,7 @@ Authors: BHOZZ Technology Solutions: Amber Holladay, Yukai Zhou, Mashiyath Zaman
 Date: Jun 10, 2020
 Assignment: MidPoint Deliverable
 Purpose: Store Class
- */
+*/
 
 package CIS484.Capstone;
 

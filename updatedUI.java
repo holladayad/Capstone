@@ -15,7 +15,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.*;
@@ -31,6 +34,8 @@ public class updatedUI extends Application {
    public static ObservableList voliList = FXCollections.observableArrayList();
    public static ObservableList itemList = FXCollections.observableArrayList();
    public static ObservableList donateList = FXCollections.observableArrayList();
+   public static ObservableList eventList = FXCollections.observableArrayList();
+   
 
 
    //Observable List for combo box
@@ -51,6 +56,9 @@ public class updatedUI extends Application {
    public ListView olVoliInfoList = new ListView(voliList);
    public ListView olItemList = new ListView(itemList);
    public ListView oldonateList = new ListView(donateList);
+   public ListView olEventInfo = new ListView(eventList);
+   public ListView olUpcomingEventInfo = new ListView(eventList);
+   
    //Controls
 
    //Location Tab
@@ -142,9 +150,12 @@ public class updatedUI extends Application {
    Button btnBrowse = new Button("Browse");
    TextArea txtPhoto = new TextArea();
    Button btnUpld = new Button("Upload");
+   Button btnUpcomingEventDetails = new Button("View Event Details:");
 
    Label lblupcomingEvent = new Label("Upcoming Event");
-   TextArea txtupcomingEvent = new TextArea();
+   //TextArea txtupcomingEvent = new TextArea();
+   
+   
 
 
    //payroll tab
@@ -167,6 +178,7 @@ public class updatedUI extends Application {
    TextArea txtdisplayPayroll = new TextArea();
 
    //event Tab
+   Label lblEventError = new Label("");
    Label lblEvent = new Label("Event");
    Label lblEventName = new Label("Event Name");
    TextField txtEvent = new TextField();
@@ -180,9 +192,19 @@ public class updatedUI extends Application {
    RadioButton radioEventEditLocation = new RadioButton("Edit");
    ToggleGroup groupEvent = new ToggleGroup();
    Button btnConfirmEvent = new Button("Confirm");
-
+   Button btnClearEvent = new Button("Clear");
+   Button btnEventDetails = new Button("View Details");
    Label lbleventInfo = new Label("Event Information");
-   TextArea txteventInfo = new TextArea();
+   
+   //event details
+  
+   Label lblEventDetName = new Label("");
+//   ImageView imageView = new ImageView();
+   Label lblEventDetDate = new Label("");
+   Label lblEventDetDes = new Label("");
+   Button btnCloseDetails = new Button("Close");
+   
+   
 
    //item(Inventory) Tab
    Label lblitemName = new Label("Item Name");
@@ -277,6 +299,15 @@ public class updatedUI extends Application {
    
    @Override
    public void start(Stage primaryStage) {
+       
+    // Loads a picture from the same directory as this file
+    // Need to do this for every stage
+    try{
+        primaryStage.getIcons().add(new 
+            Image(getClass().getResourceAsStream("logo.jpg")));
+    }catch(Exception e){
+            System.out.println("Someone forgot to download the logo...");
+            }
 
        primaryPane.setVgap(30);
        primaryPane.setHgap(30);
@@ -359,11 +390,13 @@ public class updatedUI extends Application {
                     
                 if (!errorMsg.equals("")){
                     lbllocError.setText(errorMsg);
+                    lbllocError.setTextFill(Color.RED);
                     return;
                 }
                 storeData.add((new Store(txtlocName.getText(), txtStreet.getText(), txtCity.getText(),
                         txtState.getText(), txtZip.getText(),
                         phoneNumber, txtEmail.getText())));
+                lbllocError.setText("");
 
                 storeTableData.clear();
                 for (Store s: storeData)
@@ -595,8 +628,46 @@ public class updatedUI extends Application {
 
        //right section
        boardPane.add(lblupcomingEvent,5,2);
-       boardPane.add(txtupcomingEvent,5,3,1,12);
-       txtupcomingEvent.setMaxWidth(230);
+       boardPane.add(olUpcomingEventInfo,5,3,1,11);
+       boardPane.add(btnUpcomingEventDetails, 5, 15);
+       olUpcomingEventInfo.setMaxWidth(230);
+       
+       btnUpcomingEventDetails.setOnAction(e -> {
+            
+            if (!olEventInfo.getSelectionModel().isEmpty()){
+                Event selectedItem = (Event) olEventInfo.getSelectionModel().getSelectedItem();
+                GridPane eventDetailPane = new GridPane();
+                
+                Image img = new Image(selectedItem.getPicURL());
+                ImageView imageView = new ImageView(img);
+                eventDetailPane.add(imageView, 1, 0, 4, 4);
+                
+                imageView.setPreserveRatio(true);
+                imageView.setFitHeight(300);
+                imageView.setFitWidth(300);
+                
+                
+                eventDetailPane.add(lblEventDetName, 1, 6, 2, 1);
+                eventDetailPane.add(lblEventDetDate, 3, 6, 2, 1);
+                eventDetailPane.add(lblEventDetDes, 1, 8, 2 ,1);
+                eventDetailPane.add(btnCloseDetails, 1, 10, 2, 1);
+                
+                lblEventDetName.setText(selectedItem.getEventName());
+                lblEventDetDate.setText(selectedItem.getEventDate().toString());
+                lblEventDetDes.setText(selectedItem.getEventDiscrip());
+                btnCloseDetails.setOnAction( ee-> {
+                    Window window = ((Node)(ee.getSource())).getScene().getWindow();
+                    ((Stage) window).close();
+                });
+                
+                Scene secondScene = new Scene(eventDetailPane, 300, 500);
+                Stage secondStage = new Stage();
+                secondStage.setScene(secondScene);
+                secondStage.setTitle(selectedItem.getEventName());
+                secondStage.show();
+            }
+            
+        });
 
        boardPane.setHgap(20);
        boardPane.setVgap(5);
@@ -630,23 +701,134 @@ public class updatedUI extends Application {
        //Add items to event tab
        radioEventAddLocation.setToggleGroup(groupEvent);
        radioEventEditLocation.setToggleGroup(groupEvent);
+       eventPane.add(lblEventError,1,0);
        eventPane.add(lblEvent, 1, 1);
-       eventPane.add(lblEventName, 1, 3,2,1);
-       eventPane.add(txtEvent, 1, 4,2,1);
-       eventPane.add(lblEventImg, 1, 5,2,1);
-       eventPane.add(txtEventImg, 1, 6,2,1);
-       eventPane.add(lblDate, 1, 7,2,1);
-       eventPane.add(datePickerEvent, 1, 8,2,1);
+       eventPane.add(lblEventName, 1, 3);
+       eventPane.add(txtEvent, 1, 4);
+       eventPane.add(lblEventImg, 1, 5);
+       eventPane.add(txtEventImg, 1, 6);
+       eventPane.add(lblDate, 1, 7);
+       eventPane.add(datePickerEvent, 1, 8);
        eventPane.add(lbleventDiscription, 1, 9,2,1);
        eventPane.add(txteventDes, 1, 10, 2, 2);
        eventPane.add(radioEventAddLocation,1,12);
        eventPane.add(radioEventEditLocation,2,12);
-       eventPane.add(btnConfirmEvent, 1, 13,2,1);
+       eventPane.add(btnConfirmEvent, 1, 13);
+       eventPane.add(btnClearEvent, 2, 13);
 
        eventPane.add(lbleventInfo, 4, 1);
-       eventPane.add(txteventInfo, 4, 2, 1, 10);
+       eventPane.add(olEventInfo, 4, 2, 1, 10);
+       eventPane.add(btnEventDetails, 4,12);
        eventPane.setHgap(20);
        eventPane.setVgap(20);
+       
+       radioEventAddLocation.setSelected(true);
+       
+       btnConfirmEvent.setOnAction(e ->{
+           boolean valid = true;
+           valid = valid && !txtEvent.getText().isEmpty();
+           valid = valid && !txtEventImg.getText().isEmpty();
+           valid = valid && !datePickerEvent.getValue().toString().isEmpty();
+           valid = valid && !txteventDes.getText().isEmpty();
+           if (!valid)
+           {
+               lblEventError.setText("Please fill in all fields."); 
+               lblEventError.setTextFill(Color.RED);
+               return;
+           }
+           
+           try{
+               Image test = new Image(txtEventImg.getText());
+           }catch (IllegalArgumentException ex) {
+                    lblEventError.setText("Unrecognized URL format");
+                    lblEventError.setTextFill(Color.RED);
+                    return;
+                }
+           
+           
+            if(radioEventAddLocation.isSelected())
+            {
+                lblEventError.setText("");
+                eventList.add(new Event(txtEvent.getText(), txtEventImg.getText(), 
+                    datePickerEvent.getValue(), txteventDes.getText()));
+            }
+            else
+            {
+                if (!olEventInfo.getSelectionModel().isEmpty()){
+                     Event selectedItem = (Event) olEventInfo.getSelectionModel().getSelectedItem();
+                     selectedItem.editEvent(txtEvent.getText(), txtEventImg.getText(), 
+                    datePickerEvent.getValue(), txteventDes.getText());
+                     olEventInfo.refresh();
+                }
+            }
+            olEventInfo.getSelectionModel().clearSelection();
+            txtEvent.clear();
+            txtEventImg.clear();
+            txteventDes.clear();
+            datePickerEvent.getEditor().clear();
+            datePickerEvent.setValue(null);
+           
+          
+       });
+       btnClearEvent.setOnAction(e -> {
+            olEventInfo.getSelectionModel().clearSelection();
+            txtEvent.clear();
+            txtEventImg.clear();
+            txteventDes.clear();
+            datePickerEvent.getEditor().clear();
+            datePickerEvent.setValue(null);
+            radioEventAddLocation.setSelected(true);
+       });
+       
+        olEventInfo.setOnMouseReleased(e -> {
+           if (!olEventInfo.getSelectionModel().isEmpty()){
+               Event selectedItem = (Event) olEventInfo.getSelectionModel().getSelectedItem();
+               txtEvent.setText(selectedItem.getEventName());
+               txtEventImg.setText(selectedItem.getPicURL());
+               datePickerEvent.setValue(selectedItem.getEventDate());
+               txteventDes.setText(selectedItem.getEventDiscrip());
+               radioEventEditLocation.setSelected(true);
+               
+           }
+           
+        });
+        
+        btnEventDetails.setOnAction(e -> {
+            
+            if (!olEventInfo.getSelectionModel().isEmpty()){
+                Event selectedItem = (Event) olEventInfo.getSelectionModel().getSelectedItem();
+                GridPane eventDetailPane = new GridPane();
+                
+                Image img = new Image(selectedItem.getPicURL());
+                ImageView imageView = new ImageView(img);
+                eventDetailPane.add(imageView, 1, 0, 4, 4);
+                
+                imageView.setPreserveRatio(true);
+                imageView.setFitHeight(300);
+                imageView.setFitWidth(300);
+                
+                
+                eventDetailPane.add(lblEventDetName, 1, 6, 2, 1);
+                eventDetailPane.add(lblEventDetDate, 3, 6, 2, 1);
+                eventDetailPane.add(lblEventDetDes, 1, 8, 2 ,1);
+                eventDetailPane.add(btnCloseDetails, 1, 10, 2, 1);
+                
+                lblEventDetName.setText(selectedItem.getEventName());
+                lblEventDetDate.setText(selectedItem.getEventDate().toString());
+                lblEventDetDes.setText(selectedItem.getEventDiscrip());
+                btnCloseDetails.setOnAction( ee-> {
+                    Window window = ((Node)(ee.getSource())).getScene().getWindow();
+                    ((Stage) window).close();
+                });
+                
+                Scene secondScene = new Scene(eventDetailPane, 300, 500);
+                Stage secondStage = new Stage();
+                secondStage.setScene(secondScene);
+                secondStage.setTitle(selectedItem.getEventName());
+                secondStage.show();
+            }
+            
+        });
 
        //add items to Item(Inventory) Pane
        //left section
@@ -719,7 +901,7 @@ public class updatedUI extends Application {
 
        //set login stage and scene
        Stage loginStage = new Stage();
-
+       
        Scene loginScene = new Scene(loginPane,400,600);
        loginStage.setScene(loginScene);
        loginStage.setTitle("Shenandoah CARES Login");
